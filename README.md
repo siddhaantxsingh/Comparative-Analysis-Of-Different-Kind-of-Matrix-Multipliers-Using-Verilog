@@ -1,0 +1,2 @@
+# Comparative-Analysis-Of-Different-Kind-of-Matrix-Multipliers-Using-Verilog
+To design, implement, and comparatively analyze three distinct hardware architectures — Serial, Parallel, and Pipelined — for NxN square matrix multiplication using Verilog.matrix sizes (2×2, 3×3, and 4×4) to study the trade-offs between area, power consumption, and timing performance across different architectural approaches.
