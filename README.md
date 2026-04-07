@@ -3,124 +3,179 @@
 [![Verilog](https://img.shields.io/badge/Language-Verilog-blue)]()
 [![Cadence](https://img.shields.io/badge/Tools-Cadence%20Genus%20%7C%20Innovus-green)]()
 [![Status](https://img.shields.io/badge/Project-Completed-brightgreen)]()
-[![Made With Love](https://img.shields.io/badge/Made%20With-%E2%9D%A4-red)]()
 
-> 🚀 High-performance hardware implementations of matrix multiplication using Serial, Parallel, and Pipelined architectures
+> 🚀 Comparative analysis of Serial, Parallel, and Pipelined Matrix Multipliers using Verilog HDL
 
 ---
 
 ## 📋 Project Overview
 
-This project implements and compares three fundamental VLSI architectures for matrix multiplication using **Verilog HDL**.
+This project implements and compares three fundamental VLSI architectures for matrix multiplication:
+
+- 🔁 Serial Architecture  
+- ⚡ Parallel Architecture  
+- 🚀 Pipelined Architecture  
 
 ### ✨ Highlights
-- 🔁 Three architectures implemented from scratch  
-- 📊 Full comparison: Area, Power, Timing  
+- 📊 Area, Power, Timing comparison  
 - ⚡ Synthesized using Cadence Genus  
-- 🧱 Physical layouts using Innovus  
-- 📈 Scalable design (2×2, 3×3, 4×4)  
+- 🧱 Layout using Innovus  
+- 📈 Scalable (2×2, 3×3, 4×4)
 
 ---
 
-## 🧠 Problem Statement
+## 🧠 Theory
 
-Matrix multiplication is a core operation in:
-- AI accelerators 🤖  
-- DSP systems 📡  
-- Graphics & vision 🎥  
+Matrix multiplication:
 
-The challenge is optimizing:
-> ⚖️ **Speed vs Area vs Power**
+C[i][j] = Σ (A[i][k] × B[k][j])
+
+- Requires N³ operations  
+- Implemented differently in hardware for optimization  
 
 ---
 
-## 🎞️ Architecture Flow (Visual)
+## 🎞️ Architecture Flowcharts
 
 ### 🔁 Serial Architecture
 ```mermaid
 flowchart LR
-    A["Input A"] --> M["Multiply"]
-    B["Input B"] --> M
+    A["A(i,k)"] --> M["Multiply"]
+    B["B(k,j)"] --> M
     M --> ACC["Accumulator"]
-    ACC --> OUT["Output"]
+    ACC --> ACC
     FSM["FSM Control"] --> ACC
+    ACC --> OUT["C(i,j)"]
 ```
 
 ### ⚡ Parallel Architecture
 ```mermaid
 flowchart TB
-    A["A"] --> M1["Multiply"]
-    B["B"] --> M1
+    A0["A(i,0)"] --> M0["Multiply"]
+    B0["B(0,j)"] --> M0
 
-    A --> M2["Multiply"]
-    B --> M2
+    A1["A(i,1)"] --> M1["Multiply"]
+    B1["B(1,j)"] --> M1
 
-    M1 --> ADD["Adder"]
-    M2 --> ADD
-    ADD --> OUT["Output"]
+    A2["A(i,2)"] --> M2["Multiply"]
+    B2["B(2,j)"] --> M2
+
+    M0 --> S1["Adder"]
+    M1 --> S1
+    S1 --> S2["Adder"]
+    M2 --> S2
+    S2 --> OUT["C(i,j)"]
 ```
 
 ### 🚀 Pipelined Architecture
 ```mermaid
 flowchart LR
-    A["Input A"] --> M["Multiply"]
-    B["Input B"] --> M
+    A["A(i,k)"] --> M["Multiply"]
+    B["B(k,j)"] --> M
 
-    M --> R["Register"]
+    M --> R["Pipeline Register"]
     R --> ADD["Adder"]
-    ADD --> OUT["Output"]
+    ADD --> ACC["Accumulator"]
+
+    ACC --> OUT["C(i,j)"]
 ```
 
 ---
 
-## 🧠 Architecture Explanation
+## 🧠 Detailed Architecture Explanation
 
 ### 🔁 Serial
-- Single MAC unit  
-- Sequential computation  
-- Low area, high latency  
+- Single MAC unit reused  
+- FSM controls computation  
+- Computes one element at a time  
+- ✔ Low area  
+- ❌ High latency  
 
 ### ⚡ Parallel
-- All operations in parallel  
-- Fastest execution  
-- High area & power  
+- All multipliers active simultaneously  
+- Uses adder tree  
+- ✔ Fastest  
+- ❌ High area & power  
 
 ### 🚀 Pipelined
-- Staged computation  
-- Balanced design  
-- Improved throughput  
+- Uses registers between stages  
+- Overlaps operations  
+- ✔ Balanced design  
+- ✔ Improved timing  
 
 ---
 
-## 📊 Performance Comparison
+## 📊 Architecture Comparison
 
-| Metric | Serial | Parallel | Pipelined |
-|--------|--------|----------|------------|
+| Parameter | Serial | Parallel | Pipelined |
+|----------|--------|----------|------------|
 | Multipliers | 1 | N³ | N² |
-| Latency | High | Very Low | Medium |
+| Latency | N³ + N² | 1 | N |
 | Area | Low | High | Medium |
 | Power | Low | High | Medium |
 
 ---
 
-## 📊 Results
-
-![Area](docs/area_plot.png)
-![Power](docs/power_plot.png)
-![Timing](docs/timing_plot.png)
-
----
-
 ## 🧩 Architecture Diagrams
 
-![Parallel](docs/parallel.png)
-![Pipelined](docs/pipelined.png)
-![Serial](docs/serial.png)
-![FSM](docs/fsm.png)
+### 🔁 Serial Architecture Diagram
+![Serial Diagram](docs/serial.png)
+
+### ⚡ Parallel Architecture Diagram
+![Parallel Diagram](docs/parallel.png)
+
+### 🚀 Pipelined Architecture Diagram
+![Pipelined Diagram](docs/pipelined.png)
+
+### 🧠 FSM Control Diagram
+![FSM Diagram](docs/fsm.png)
 
 ---
 
-## 🛠️ Tech Stack
+## 📊 Performance Analysis
+
+### 📈 Area Comparison Plot
+![Area Plot](docs/area_plot.png)
+
+### ⚡ Power Comparison Plot
+![Power Plot](docs/power_plot.png)
+
+### ⏱️ Timing (Slack) Plot
+![Timing Plot](docs/timing_plot.png)
+
+---
+
+## 📊 Numerical Results
+
+### 📐 Area
+
+| Architecture | 2×2 | 3×3 | 4×4 |
+|-------------|-----|-----|-----|
+| Serial | 1780 | 3126 | 4787 |
+| Pipelined | 3854 | 9024 | 16055 |
+| Parallel | 3083 | 10218 | 23453 |
+
+---
+
+### ⚡ Power
+
+| Architecture | 2×2 | 3×3 | 4×4 |
+|-------------|-----|-----|-----|
+| Serial | 418 | 769 | 1164 |
+| Pipelined | 758 | 2233 | 3122 |
+| Parallel | 528 | 1521 | 3119 |
+
+---
+
+### ⏱️ Timing
+
+- All designs meet timing constraints  
+- Best: Pipelined  
+- Worst: Serial (large N)  
+
+---
+
+## 🛠️ Tools Used
 
 - Verilog HDL  
 - Cadence Genus  
@@ -145,7 +200,7 @@ matrix-multiplier-vlsi/
 ## 🎯 Applications
 
 - AI accelerators  
-- Signal processing  
+- DSP systems  
 - Image processing  
 - Scientific computing  
 
@@ -153,8 +208,8 @@ matrix-multiplier-vlsi/
 
 ## 💡 Key Insights
 
-✔ Serial → Efficient but slow  
-✔ Parallel → Fast but expensive  
+✔ Serial → Low resource usage  
+✔ Parallel → Maximum speed  
 ✔ Pipelined → Best trade-off  
 
 ---
@@ -170,4 +225,5 @@ matrix-multiplier-vlsi/
 
 ## ⭐ If you like this project
 
-Give it a ⭐ and share it!
+Give it a ⭐ on GitHub!
+
