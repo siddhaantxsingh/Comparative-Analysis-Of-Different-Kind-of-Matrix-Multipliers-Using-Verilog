@@ -40,42 +40,79 @@ The challenge is optimizing:
 ### 🔁 Serial (FSM + MAC)
 ```mermaid
 flowchart LR
-    A[A[i][k]] --> M((×))
-    B[B[k][j]] --> M
-    M --> ACC[Accumulator]
+    classDef mul fill:#ffcccb,stroke:#333,stroke-width:1px;
+    classDef acc fill:#cce5ff,stroke:#333,stroke-width:1px;
+    classDef ctrl fill:#e6ccff,stroke:#333,stroke-width:1px;
+
+    A["A(i,k)"] --> M((×)):::mul
+    B["B(k,j)"] --> M
+    M --> ACC["Accumulator"]:::acc
     ACC -->|feedback| ACC
-    FSM[[FSM Controller]] --> ACC
-    ACC --> C[C[i][j]]
+    FSM["FSM Controller"]:::ctrl --> ACC
+    ACC --> C["C(i,j)"]
 ```
 
 ### ⚡ Parallel (Fully Combinational)
 ```mermaid
 flowchart TB
-    subgraph Row i
-      A0[A[i][0]] --> M0((×))
-      B0[B[0][j]] --> M0
-      A1[A[i][1]] --> M1((×))
-      B1[B[1][j]] --> M1
-      A2[A[i][2]] --> M2((×))
-      B2[B[2][j]] --> M2
-    end
-    M0 --> S1((+))
+    classDef mul fill:#ffcccb,stroke:#333;
+    classDef add fill:#cce5ff,stroke:#333;
+
+    A0["A(i,0)"] --> M0((×)):::mul
+    B0["B(0,j)"] --> M0
+
+    A1["A(i,1)"] --> M1((×)):::mul
+    B1["B(1,j)"] --> M1
+
+    A2["A(i,2)"] --> M2((×)):::mul
+    B2["B(2,j)"] --> M2
+
+    M0 --> S1((+)):::add
     M1 --> S1
-    S1 --> S2((+))
+    S1 --> S2((+)):::add
     M2 --> S2
-    S2 --> C[C[i][j]]
+    S2 --> C["C(i,j)"]
 ```
 
-### 🚀 Pipelined (k-stage)
+### 🚀 Pipelined (Stage-wise Computation)
 ```mermaid
 flowchart LR
-    A[A[i][k]] --> M((×))
-    B[B[k][j]] --> M
-    M --> R1[Reg mul_reg]
-    R1 --> ADD((+))
-    ADD --> ACC[acc]
-    ACC -->|k_reg==0 reset/else accumulate| ACC
-    ACC -->|k_reg==N-1| C[C[i][j]]
+    classDef mul fill:#ffcccb,stroke:#333;
+    classDef reg fill:#ffe5cc,stroke:#333;
+    classDef acc fill:#cce5ff,stroke:#333;
+
+    A["A(i,k)"] --> M((×)):::mul
+    B["B(k,j)"] --> M
+
+    M --> R1["mul_reg"]:::reg
+    R1 --> ADD((+)):::acc
+    ADD --> ACC["acc"]:::acc
+
+    ACC -->|k_reg == 0 (reset)| ACC
+    ACC -->|k_reg != 0 (accumulate)| ACC
+
+    ACC -->|k_reg == N-1| C["C(i,j)"]
+```
+
+### 🧠 Step-by-Step Pipeline Operation
+
+####mermaid
+flowchart LR
+    classDef mul fill:#ffcccb,stroke:#333;
+    classDef reg fill:#ffe5cc,stroke:#333;
+    classDef acc fill:#cce5ff,stroke:#333;
+
+    A["A(i,k)"] --> M((×)):::mul
+    B["B(k,j)"] --> M
+
+    M --> R1["mul_reg"]:::reg
+    R1 --> ADD((+)):::acc
+    ADD --> ACC["acc"]:::acc
+
+    ACC -->|k_reg == 0 (reset)| ACC
+    ACC -->|k_reg != 0 (accumulate)| ACC
+
+    ACC -->|k_reg == N-1| C["C(i,j)"]
 ```
 
 ---
@@ -226,23 +263,6 @@ matrix-multiplier-vlsi/
 
 ---
 
-## 📸 How to Extract Images (IMPORTANT)
-
-From your report PDF:
-
-1. Open PDF
-2. Right-click on diagram → Save image
-3. Save inside `docs/`
-
-### Required Images:
-- parallel.png
-- pipelined.png
-- serial.png
-- fsm.png
-- waveform.png
-- layout.png
-
----
 
 ## 🎯 Applications
 
