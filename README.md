@@ -294,26 +294,7 @@ matrix-multiplier-vlsi/
 ├── docs/
 ├── reports/
 └── README.md
-```
-
 ---
-
-## 📸 How to Extract Images (IMPORTANT)
-
-From your report PDF:
-
-1. Open PDF
-2. Right-click on diagram → Save image
-3. Save inside `docs/`
-
-### Required Images:
-
-* parallel.png
-* pipelined.png
-* serial.png
-* fsm.png
-* waveform.png
-* layout.png
 
 ---
 
