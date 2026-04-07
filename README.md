@@ -143,7 +143,7 @@ flowchart LR
 
   ACC -->|k_reg == N-1| C["C(i,j)"]
 
-````
+```
 
 ---
 
