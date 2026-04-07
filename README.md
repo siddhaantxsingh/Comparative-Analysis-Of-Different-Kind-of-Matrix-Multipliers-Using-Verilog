@@ -42,15 +42,11 @@ The challenge is optimizing:
 
 ```mermaid
 flowchart LR
-    classDef mul fill:#ffcccb,stroke:#333;
-    classDef acc fill:#cce5ff,stroke:#333;
-    classDef ctrl fill:#e6ccff,stroke:#333;
-
-    A["A(i,k)"] --> M((×)):::mul
+    A["A(i,k)"] --> M["Multiply"]
     B["B(k,j)"] --> M
-    M --> ACC["Accumulator"]:::acc
-    ACC -->|feedback| ACC
-    FSM["FSM Controller"]:::ctrl --> ACC
+    M --> ACC["Accumulator"]
+    ACC --> ACC
+    FSM["FSM"] --> ACC
     ACC --> OUT["C(i,j)"]
 ```
 
@@ -58,61 +54,35 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    classDef mul fill:#ffcccb,stroke:#333;
-    classDef add fill:#cce5ff,stroke:#333;
-
-    A0["A(i,0)"] --> M0((×)):::mul
+    A0["A(i,0)"] --> M0["×"]
     B0["B(0,j)"] --> M0
 
-    A1["A(i,1)"] --> M1((×)):::mul
+    A1["A(i,1)"] --> M1["×"]
     B1["B(1,j)"] --> M1
 
-    A2["A(i,2)"] --> M2((×)):::mul
+    A2["A(i,2)"] --> M2["×"]
     B2["B(2,j)"] --> M2
 
-    M0 --> S1((+)):::add
+    M0 --> S1["+"]
     M1 --> S1
-    S1 --> S2((+)):::add
+    S1 --> S2["+"]
     M2 --> S2
     S2 --> OUT["C(i,j)"]
 ```
 
 ### 🚀 Pipelined Architecture (Stage-wise)
 
-````mermaid
-flowchart LR
-    classDef mul fill:#ffcccb,stroke:#333;
-    classDef reg fill:#ffe5cc,stroke:#333;
-    classDef acc fill:#cce5ff,stroke:#333;
-
-    A["A(i,k)"] --> M((×)):::mul
-    B["B(k,j)"] --> M
-
-    M --> R1["mul_reg"]:::reg
-    R1 --> ADD((+)):::acc
-    ADD --> ACC["acc"]:::acc
-
-    ACC --> ACC1["accumulate"]
-    ACC1 --> ACC
-
-    ACC --> OUT["C(i,j)"]
 ```mermaid
 flowchart LR
-    classDef mul fill:#ffcccb,stroke:#333;
-    classDef reg fill:#ffe5cc,stroke:#333;
-    classDef acc fill:#cce5ff,stroke:#333;
-
-    A["A(i,k)"] --> M((×)):::mul
+    A["A(i,k)"] --> M["×"]
     B["B(k,j)"] --> M
 
-    M --> R1["mul_reg"]:::reg
-    R1 --> ADD((+)):::acc
-    ADD --> ACC["acc"]:::acc
+    M --> R["Register"]
+    R --> ADD["Adder"]
+    ADD --> ACC["Accumulator"]
 
-    ACC -->|k_reg = 0 (reset)| ACC
-    ACC -->|k_reg ≠ 0 (accumulate)| ACC
-    ACC -->|k_reg = N-1| OUT["C(i,j)"]
-````
+    ACC --> OUT["C(i,j)"]
+```
 
 ---
 
